@@ -1,4 +1,3 @@
-
 # Pull-in the Mousetrap lib.
 require './../../lib/mousetrap/mousetrap'
 
@@ -6,13 +5,16 @@ EyeJS = require '/Users/josh/work/eyejs'
 
 eyejs = new EyeJS()
 
-enabled = localStorage['enabled'] or eyejs.enabled
-size    = localStorage['size']    or eyejs.indicator.size
-opacity = localStorage['opacity'] or eyejs.indicator.opacity()
 
-if enabled then eyejs.enable()
-eyejs.indicator.resize size
-eyejs.indicator.opacity opacity
+chrome.storage.local.get 'config', (storage = {}) ->
+  config  = storage.config
+  enabled = if config.enabled? then config.enabled else eyejs.enabled
+  size    = if config.size?    then config.size    else eyejs.indicator.size
+  opacity = if config.opacity? then config.opacity else eyejs.indicator.opacity()
+
+  if enabled then eyejs.enable()
+  eyejs.indicator.resize size
+  eyejs.indicator.opacity opacity
 
 
 getStatus = ->
@@ -23,9 +25,16 @@ getStatus = ->
   }
 
 
+updateSettings = ->
+  chrome.storage.local.set 'config': getStatus()
+
+
 Mousetrap.bind 'ctrl', ->
-  console.log 'clicking!'
   eyejs.triggerEvents 'click'
+
+# Don't prevent triggering a click if inside a form element.
+# @see http://craig.is/killing/mice
+Mousetrap.stopCallback = -> false
 
 
 if chrome?
@@ -35,23 +44,20 @@ if chrome?
     switch request.msg
       when 'eyejs:enable'
         eyejs.enable()
-        localStorage['enabled'] = true
+        updateSettings()
 
       when 'eyejs:disable'
         eyejs.disable()
-        localStorage['enabled'] = false
+        updateSettings()
 
       when 'eyejs:getstatus' then null
 
       when 'eyejs:resize'
         eyejs.indicator.resize +request.val
-        localStorage['size'] = +request.val
+        updateSettings()
 
       when 'eyejs:setopacity'
         eyejs.indicator.opacity +request.val
-        localStorage['opacity'] = +request.val
-
-      when 'eyejs:calibrate'
-        eyejs.calibrate()
+        updateSettings()
 
     sendResponse getStatus()

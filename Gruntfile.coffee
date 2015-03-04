@@ -101,6 +101,7 @@ module.exports = (grunt) ->
           loadPath: 'lib/'
         files:
           'dist/styles.css': 'src/sass/styles.sass'
+          'dist/eyejs-chrome.css': 'src/sass/eyejs-chrome.sass'
 
 
 

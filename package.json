@@ -8,6 +8,7 @@
     "lodash": "*"
   },
   "devDependencies": {
+    "async": "~0.9",
     "mocha": "1.21.x",
     "chai": "1.9.x",
     "sinon": "1.12.x",
