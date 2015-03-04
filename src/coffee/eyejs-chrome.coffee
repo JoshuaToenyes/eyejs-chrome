@@ -1,4 +1,7 @@
 
+# Pull-in the Mousetrap lib.
+require './../../lib/mousetrap/mousetrap'
+
 EyeJS = require '/Users/josh/work/eyejs'
 
 eyejs = new EyeJS()
@@ -9,6 +12,11 @@ getStatus = ->
     size: eyejs.indicator.size
     opacity: eyejs.indicator.opacity()
   }
+
+
+Mousetrap.bind 'ctrl', ->
+  console.log 'clicking!'
+  eyejs.triggerEvents 'click'
 
 
 if chrome?
