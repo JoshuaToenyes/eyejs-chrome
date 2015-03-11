@@ -29,7 +29,13 @@ scroller = _.throttle (e) ->
 , 200
 
 
+printer = _.throttle (e) ->
+  console.log e.available.left, e.available.right, e.available.both
+, 0
+
 eyejs.on 'gaze', scroller
+
+#eyejs.on 'raw', printer
 
 
 

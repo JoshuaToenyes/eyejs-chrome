@@ -4,26 +4,27 @@
   to
     outline-color: rgba(blue, 0.3)
 
-img[eyejs-gaze]
-  -webkit-transform: scale(1.05)
-  -moz-transform: scale(1.05)
-  -ms-transform: scale(1.05)
-  -o-transform: scale(1.05)
-  transform: scale(1.05)
+img
   -webkit-transition: all 1s
   -moz-transition: all 1s
   -ms-transition: all 1s
   -o-transition: all 1s
   transition: all 1s
 
-a[eyejs-gaze], a[eyejs-gaze] > img
+img[eyejs-gaze]
+  -webkit-transform: scale(1.05)
+  -moz-transform: scale(1.05)
+  -ms-transform: scale(1.05)
+  -o-transform: scale(1.05)
+  transform: scale(1.05)
+
+a
   -webkit-transition: background-color 1s, color 1s
   -moz-transition: background-color 1s, color 1s
   -ms-transition: background-color 1s, color 1s
   -o-transition: background-color 1s, color 1s
   transition: background-color 1s, color 1s
+
+a[eyejs-gaze], a[eyejs-gaze] > img
   background-color: rgba(#FFFF00, 0.4)
-  //outline-width: 2px
-  //outline-style: solid
-  //-webkit-animation: outline 1s
   color: blue !important
