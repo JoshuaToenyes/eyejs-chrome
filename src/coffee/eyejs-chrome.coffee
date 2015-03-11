@@ -5,6 +5,33 @@ EyeJS = require '/Users/josh/work/eyejs'
 
 eyejs = new EyeJS()
 
+vscroll = require 'vscroll'
+
+_ = require 'lodash'
+
+
+scroller = _.throttle (e) ->
+  MAX_VELOCITY = 500
+  THRESHOLD = 100
+  EDGE_FUZZ = 30
+
+  if e.y >= 0 and e.y < THRESHOLD
+    q = (THRESHOLD - e.y) / THRESHOLD
+    v = q * MAX_VELOCITY
+    vscroll.velocity 0, -v
+  else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
+    q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
+    v = q * MAX_VELOCITY
+    vscroll.velocity 0, v
+  else
+    vscroll.velocity 0, 0
+
+, 200
+
+
+eyejs.on 'gaze', scroller
+
+
 
 chrome.storage.local.get 'config', (storage = {}) ->
   config  = storage.config

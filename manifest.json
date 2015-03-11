@@ -3,7 +3,6 @@
   "name": "EyeJS for Chrome",
   "description": "Adds EyeJS support for eye tracking interactivity to Chrome.",
   "version": "*|VERSION_NUMBER|*",
-  "version_name": "*|VERSION|*",
   "permissions": ["tabs", "http://localhost/", "storage"],
   "background": {
     "scripts": ["background.js"],
