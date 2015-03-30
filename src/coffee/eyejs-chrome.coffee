@@ -11,11 +11,11 @@ _ = require 'lodash'
 
 
 scroller = _.throttle (e) ->
-  MAX_VELOCITY = 500
-  THRESHOLD = 100
+  MAX_VELOCITY = 900
+  THRESHOLD = 150
   EDGE_FUZZ = 30
 
-  if e.y >= 0 and e.y < THRESHOLD
+  if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
     q = (THRESHOLD - e.y) / THRESHOLD
     v = q * MAX_VELOCITY
     vscroll.velocity 0, -v
@@ -29,12 +29,17 @@ scroller = _.throttle (e) ->
 , 200
 
 
-printer = _.throttle (e) ->
+rawPrinter = _.throttle (e) ->
   console.log e.available.left, e.available.right, e.available.both
 , 0
 
+gazePrinter = _.throttle (e) ->
+  console.log e.x, e.y
+, 50
+
 eyejs.on 'gaze', scroller
 
+#eyejs.on 'gaze', gazePrinter
 #eyejs.on 'raw', printer
 
 
