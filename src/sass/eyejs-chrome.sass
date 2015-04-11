@@ -28,3 +28,61 @@ a
 a[eyejs-gaze], a[eyejs-gaze] > img
   background-color: rgba(#FFFF00, 0.4)
   color: blue !important
+
+$NAV-BUTTON-WIDTH: 100px
+
+#eyejs-back,
+#eyejs-forward
+  position: fixed
+  top: 45%
+  height: 200px
+  width: $NAV-BUTTON-WIDTH
+  background-color: rgba(white, 0.8)
+  box-shadow: 0 0 10px rgba(black, 0.1)
+  font-size: 100px
+  line-height: 200px
+  margin-top: -100px
+  font-family: 'Cambria Math'
+  cursor: pointer
+  color: lighten(black, 70%)
+
+  &:after
+    position: absolute
+    top: 0
+    height: 100%
+    width: 100%
+
+  &[eyejs-gaze]
+    color: black
+
+#eyejs-back
+  left: 0
+  border-top-right-radius: 100px
+  border-bottom-right-radius: 100px
+  text-align: left
+  -webkit-transition: margin-left 300ms, color 600ms
+  padding-left: 10px
+  margin-left: -$NAV-BUTTON-WIDTH
+
+  &:after
+    content: '⟨'
+    left: 20px
+
+  &.eyejs-show
+    margin-left: 0
+
+#eyejs-forward
+  right: 0
+  border-top-left-radius: 100px
+  border-bottom-left-radius: 100px
+  text-align: right
+  -webkit-transition: margin-right 300ms, color 600ms
+  padding-right: 10px
+  margin-right: -$NAV-BUTTON-WIDTH
+
+  &:after
+    content: '⟩'
+    left: -20px
+
+  &.eyejs-show
+    margin-right: 0
