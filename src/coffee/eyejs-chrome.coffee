@@ -10,21 +10,23 @@ vscroll = require 'vscroll'
 _ = require 'lodash'
 
 # Scroller
-eyejs.on 'gaze', _.throttle (e) ->
-  MAX_VELOCITY = 900
-  THRESHOLD = 150
-  EDGE_FUZZ = 30
-  if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
-    q = (THRESHOLD - e.y) / THRESHOLD
-    v = q * MAX_VELOCITY
-    vscroll.velocity 0, -v
-  else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
-    q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
-    v = q * MAX_VELOCITY
-    vscroll.velocity 0, v
-  else
-    vscroll.velocity 0, 0
-, 200
+window.addEventListener 'load', ->
+
+  eyejs.on 'gaze', _.throttle (e) ->
+    MAX_VELOCITY = 900
+    THRESHOLD = 150
+    EDGE_FUZZ = 30
+    if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
+      q = (THRESHOLD - e.y) / THRESHOLD
+      v = q * MAX_VELOCITY
+      vscroll.velocity 0, -v
+    else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
+      q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
+      v = q * MAX_VELOCITY
+      vscroll.velocity 0, v
+    else
+      vscroll.velocity 0, 0
+  , 200
 
 
 chrome.storage.local.get 'config', (storage = {}) ->
@@ -80,6 +82,8 @@ addForwardBackButtons = ->
   back = document.createElement 'div'
   fwd.id = 'eyejs-forward'
   back.id = 'eyejs-back'
+  fwd.setAttribute 'data-eyejs-snap', ''
+  back.setAttribute 'data-eyejs-snap', ''
   document.body.appendChild fwd
   document.body.appendChild back
   fwd.addEventListener 'gaze', resetForwardBackButtonTimer

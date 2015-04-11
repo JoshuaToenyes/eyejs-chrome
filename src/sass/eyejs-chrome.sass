@@ -11,7 +11,7 @@ img
   -o-transition: all 350ms
   transition: all 350ms
 
-img[eyejs-gaze]
+img[data-eyejs-fixated]
   -webkit-transform: scale(1.05)
   -moz-transform: scale(1.05)
   -ms-transform: scale(1.05)
@@ -25,7 +25,7 @@ a
   -o-transition: background-color 350ms, color 350ms
   transition: background-color 350ms, color 350ms
 
-a[eyejs-gaze], a[eyejs-gaze] > img
+a[data-eyejs-fixated], a[data-eyejs-fixated] > img
   background-color: rgba(#FFFF00, 0.4)
   color: blue !important
 
@@ -52,7 +52,7 @@ $NAV-BUTTON-WIDTH: 100px
     height: 100%
     width: 100%
 
-  &[eyejs-gaze]
+  &[data-eyejs-fixated]
     color: black
 
 #eyejs-back
@@ -60,29 +60,29 @@ $NAV-BUTTON-WIDTH: 100px
   border-top-right-radius: 100px
   border-bottom-right-radius: 100px
   text-align: left
-  -webkit-transition: margin-left 300ms, color 600ms
+  -webkit-transition: transform 300ms, color 600ms
   padding-left: 10px
-  margin-left: -$NAV-BUTTON-WIDTH
+  transform: translateX(-$NAV-BUTTON-WIDTH)
 
   &:after
-    content: '⟨'
+    content: '⟪'
     left: 20px
 
   &.eyejs-show
-    margin-left: 0
+    transform: translateX(0)
 
 #eyejs-forward
   right: 0
   border-top-left-radius: 100px
   border-bottom-left-radius: 100px
   text-align: right
-  -webkit-transition: margin-right 300ms, color 600ms
+  -webkit-transition: transform 300ms, color 600ms
   padding-right: 10px
-  margin-right: -$NAV-BUTTON-WIDTH
+  transform: translateX($NAV-BUTTON-WIDTH)
 
   &:after
-    content: '⟩'
+    content: '⟫'
     left: -20px
 
   &.eyejs-show
-    margin-right: 0
+    transform: translateX(0)
