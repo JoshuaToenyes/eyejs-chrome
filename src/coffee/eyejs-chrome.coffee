@@ -9,6 +9,29 @@ vscroll = require 'vscroll'
 
 _ = require 'lodash'
 
+recorder = require '/Users/josh/Dropbox/eyejs-trial/recorder/dist/recorder-client'
+
+recordEyeEvent = (type, e) ->
+  msg =
+    event:   type
+    element: recorder.serializeNode e
+  recorder.send msg
+
+eyejs.on 'blink', (e) ->
+  recordEyeEvent 'blink', e
+
+eyejs.on 'fixation', (e) ->
+  recordEyeEvent 'fixation', e
+
+eyejs.on 'fixationend', (e) ->
+  recordEyeEvent 'fixationend', e
+
+eyejs.on 'gaze', (e) ->
+  e.event = 'gaze'
+  e.el    = recorder.serializeNode e.el
+  recorder.send e
+
+
 # Scroller
 window.addEventListener 'load', ->
 
