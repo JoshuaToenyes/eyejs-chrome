@@ -33,23 +33,23 @@ eyejs.on 'gaze', (e) ->
 
 
 # Scroller
-window.addEventListener 'load', ->
-
-  eyejs.on 'gaze', _.throttle (e) ->
-    MAX_VELOCITY = 900
-    THRESHOLD = 150
-    EDGE_FUZZ = 30
-    if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
-      q = (THRESHOLD - e.y) / THRESHOLD
-      v = q * MAX_VELOCITY
-      vscroll.velocity 0, -v
-    else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
-      q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
-      v = q * MAX_VELOCITY
-      vscroll.velocity 0, v
-    else
-      vscroll.velocity 0, 0
-  , 200
+# window.addEventListener 'load', ->
+#
+#   eyejs.on 'gaze', _.throttle (e) ->
+#     MAX_VELOCITY = 900
+#     THRESHOLD = 150
+#     EDGE_FUZZ = 30
+#     if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
+#       q = (THRESHOLD - e.y) / THRESHOLD
+#       v = q * MAX_VELOCITY
+#       vscroll.velocity 0, -v
+#     else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
+#       q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
+#       v = q * MAX_VELOCITY
+#       vscroll.velocity 0, v
+#     else
+#       vscroll.velocity 0, 0
+#   , 200
 
 
 chrome.storage.local.get 'config', (storage = {}) ->
@@ -116,6 +116,94 @@ addForwardBackButtons = ->
   eyejs.on 'gaze', showForwardBackButtons
 
 window.addEventListener 'load', addForwardBackButtons
+
+
+
+
+scrollBarShowTimer = null
+
+showScrollBars = (e) ->
+  if e.y > 10 and e.y <= window.innerHeight - 10 then return
+  up = document.getElementById('eyejs-scroll-up')
+  down = document.getElementById('eyejs-scroll-down')
+  if !up or !down then return
+  if e.y < 10
+    up.classList.add('eyejs-show')
+  else if e.y > window.innerHeight - 10
+    down.classList.add('eyejs-show')
+  resetScrollBarTimer()
+
+hideScrollBars = ->
+  up = document.getElementById('eyejs-scroll-up')
+  down = document.getElementById('eyejs-scroll-down')
+  if !up or !down then return
+  up.classList.remove('eyejs-show')
+  down.classList.remove('eyejs-show')
+  vscroll.velocity 0, 0
+  eyejs.removeListener 'gaze', scrollUp
+  eyejs.removeListener 'gaze', scrollDown
+
+resetScrollBarTimer = ->
+  clearTimeout scrollBarShowTimer
+  scrollBarShowTimer = setTimeout hideScrollBars, 2000
+
+MAX_SCROLL_VELOCITY = 900
+SCROLL_THRESHOLD = 150
+
+startedScrolling = null
+scrollTimer = null
+
+# scrollUp = _.throttle (e) ->
+#   q = (e.y - window.innerHeight + SCROLL_THRESHOLD) / SCROLL_THRESHOLD
+#   v = q * MAX_SCROLL_VELOCITY
+#   vscroll.velocity 0, v
+# , 200
+#
+# scrollDown = _.throttle (e) ->
+#   q = (SCROLL_THRESHOLD - e.y) / SCROLL_THRESHOLD
+#   v = q * MAX_SCROLL_VELOCITY
+#   vscroll.velocity 0, -v
+# , 200
+
+_scrollUp = ->
+  v = (_.now() - startedScrolling) / 3
+  vscroll.velocity 0, -Math.pow(v, 1.2)
+
+_scrollDown = ->
+  v = (_.now() - startedScrolling) / 3
+  vscroll.velocity 0, Math.pow(v, 1.2)
+
+scrollUp = ->
+  startedScrolling = _.now()
+  scrollTimer = setInterval _scrollUp, 50
+
+scrollDown = (e) ->
+  startedScrolling = _.now()
+  scrollTimer = setInterval _scrollDown, 50
+
+stopScrolling = ->
+  clearInterval scrollTimer
+  vscroll.velocity 0, 0
+
+addScrollBars = ->
+  up  = document.createElement 'div'
+  down = document.createElement 'div'
+  up.id = 'eyejs-scroll-up'
+  down.id = 'eyejs-scroll-down'
+  up.setAttribute 'data-eyejs-snap', ''
+  down.setAttribute 'data-eyejs-snap', ''
+  document.body.appendChild up
+  document.body.appendChild down
+  up.addEventListener 'gaze', resetScrollBarTimer
+  down.addEventListener 'gaze', resetScrollBarTimer
+  up.addEventListener 'fixation', scrollUp
+  up.addEventListener 'fixationend', stopScrolling
+  down.addEventListener 'fixation', scrollDown
+  down.addEventListener 'fixationend', stopScrolling
+  eyejs.on 'gaze', showScrollBars
+
+window.addEventListener 'load', addScrollBars
+
 
 Mousetrap.bind 'ctrl', ->
   eyejs.triggerEvents 'click'

@@ -26,21 +26,20 @@ a[data-eyejs-fixated], a[data-eyejs-fixated] > img
   color: blue !important
 
 $NAV-BUTTON-WIDTH: 100px
+$SCROLL-BAR-HEIGHT: 200px
 
+#eyejs-scroll-up,
+#eyejs-scroll-down,
 #eyejs-back,
 #eyejs-forward
   position: fixed
-  top: 45%
-  height: 200px
-  width: $NAV-BUTTON-WIDTH
   background-color: rgba(white, 0.8)
   box-shadow: 0 0 10px rgba(black, 0.1)
   font-size: 100px
-  line-height: 200px
-  margin-top: -100px
   font-family: 'Cambria Math'
   cursor: pointer
   color: lighten(black, 70%)
+  -webkit-transition: transform 300ms, color 600ms
 
   &:after
     position: absolute
@@ -51,34 +50,69 @@ $NAV-BUTTON-WIDTH: 100px
   &[data-eyejs-fixated]
     color: black
 
+#eyejs-scroll-up,
+#eyejs-scroll-down
+  right: 10%
+  width: 150px
+  margin-left: -75px
+  height: $SCROLL-BAR-HEIGHT
+
+  &.eyejs-show
+    transform: translateY(0)
+
+  &:after
+    top: 30px
+    text-align: center
+
+#eyejs-scroll-up
+  top: 0
+  transform: translateY(-$SCROLL-BAR-HEIGHT)
+  border-bottom-right-radius: 100px
+  border-bottom-left-radius: 100px
+
+  &:after
+    content: '↑'
+
+#eyejs-scroll-down
+  bottom: 0
+  transform: translateY($SCROLL-BAR-HEIGHT)
+  border-top-right-radius: 100px
+  border-top-left-radius: 100px
+
+  &:after
+    content: '↓'
+
+#eyejs-back,
+#eyejs-forward
+  top: 45%
+  height: 200px
+  width: $NAV-BUTTON-WIDTH
+  line-height: 200px
+  margin-top: -100px
+
+  &.eyejs-show
+    transform: translateX(0)
+
 #eyejs-back
   left: 0
   border-top-right-radius: 100px
   border-bottom-right-radius: 100px
   text-align: left
-  -webkit-transition: transform 300ms, color 600ms
   padding-left: 10px
   transform: translateX(-$NAV-BUTTON-WIDTH)
 
   &:after
-    content: '⟪'
+    content: '⟨'
     left: 20px
-
-  &.eyejs-show
-    transform: translateX(0)
 
 #eyejs-forward
   right: 0
   border-top-left-radius: 100px
   border-bottom-left-radius: 100px
   text-align: right
-  -webkit-transition: transform 300ms, color 600ms
   padding-right: 10px
   transform: translateX($NAV-BUTTON-WIDTH)
 
   &:after
-    content: '⟫'
+    content: '⟩'
     left: -20px
-
-  &.eyejs-show
-    transform: translateX(0)
