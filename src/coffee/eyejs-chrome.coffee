@@ -31,27 +31,6 @@ eyejs.on 'gaze', (e) ->
   e.el    = recorder.serializeNode e.el
   recorder.send e
 
-
-# Scroller
-# window.addEventListener 'load', ->
-#
-#   eyejs.on 'gaze', _.throttle (e) ->
-#     MAX_VELOCITY = 900
-#     THRESHOLD = 150
-#     EDGE_FUZZ = 30
-#     if e.y >= -EDGE_FUZZ and e.y < THRESHOLD
-#       q = (THRESHOLD - e.y) / THRESHOLD
-#       v = q * MAX_VELOCITY
-#       vscroll.velocity 0, -v
-#     else if e.y > window.innerHeight - THRESHOLD and e.y < window.innerHeight + EDGE_FUZZ
-#       q = (e.y - window.innerHeight + THRESHOLD) / THRESHOLD
-#       v = q * MAX_VELOCITY
-#       vscroll.velocity 0, v
-#     else
-#       vscroll.velocity 0, 0
-#   , 200
-
-
 chrome.storage.local.get 'config', (storage = {}) ->
   config  = storage.config
   enabled = if config.enabled? then config.enabled else eyejs.enabled
@@ -194,6 +173,8 @@ addScrollBars = ->
   down.id = 'eyejs-scroll-down'
   up.setAttribute 'data-eyejs-snap', ''
   down.setAttribute 'data-eyejs-snap', ''
+  up.style.zIndex = 1000000
+  down.style.zIndex = 1000000
   document.body.appendChild up
   document.body.appendChild down
   up.addEventListener 'gaze', resetScrollBarTimer
