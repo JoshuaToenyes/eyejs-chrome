@@ -107,6 +107,8 @@ addForwardBackButtons = ->
   back.id = 'eyejs-back'
   fwd.setAttribute 'data-eyejs-snap', ''
   back.setAttribute 'data-eyejs-snap', ''
+  fwd.style.zIndex = 1000000
+  back.style.zIndex = 1000000
   document.body.appendChild fwd
   document.body.appendChild back
   fwd.addEventListener 'gaze', resetForwardBackButtonTimer
