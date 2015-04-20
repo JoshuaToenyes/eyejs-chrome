@@ -3,6 +3,9 @@ require './../../lib/mousetrap/mousetrap'
 
 EyeJS = require '/Users/josh/work/eyejs'
 
+disableEyeJS = /disable\-eyejs/.test window.location.search
+enableEyeJS  = /enable\-eyejs/.test window.location.search
+
 eyejs = new EyeJS()
 
 vscroll = require 'vscroll'
@@ -53,6 +56,10 @@ getStatus = ->
 updateSettings = ->
   chrome.storage.local.set 'config': getStatus()
 
+if disableEyeJS
+  eyejs.disable()
+else if enableEyeJS
+  eyejs.enable()
 
 
 forwardBackShowTimer = null
@@ -80,14 +87,15 @@ resetForwardBackButtonTimer = ->
   forwardBackShowTimer = setTimeout hideForwardBackButtons, 2000
 
 addForwardBackButtons = ->
+  if disableEyeJS then return
   fwd  = document.createElement 'div'
   back = document.createElement 'div'
   fwd.id = 'eyejs-forward'
   back.id = 'eyejs-back'
   fwd.setAttribute 'data-eyejs-snap', ''
   back.setAttribute 'data-eyejs-snap', ''
-  fwd.style.zIndex = 1000000
-  back.style.zIndex = 1000000
+  fwd.style.zIndex = 10000000
+  back.style.zIndex = 10000000
   document.body.appendChild fwd
   document.body.appendChild back
   fwd.addEventListener 'gaze', resetForwardBackButtonTimer
@@ -167,14 +175,15 @@ stopScrolling = ->
   vscroll.velocity 0, 0
 
 addScrollBars = ->
+  if disableEyeJS then return
   up  = document.createElement 'div'
   down = document.createElement 'div'
   up.id = 'eyejs-scroll-up'
   down.id = 'eyejs-scroll-down'
   up.setAttribute 'data-eyejs-snap', ''
   down.setAttribute 'data-eyejs-snap', ''
-  up.style.zIndex = 1000000
-  down.style.zIndex = 1000000
+  up.style.zIndex = 10000000
+  down.style.zIndex = 10000000
   document.body.appendChild up
   document.body.appendChild down
   up.addEventListener 'gaze', resetScrollBarTimer
@@ -189,7 +198,7 @@ window.addEventListener 'load', addScrollBars
 
 
 Mousetrap.bind 'ctrl', ->
-  eyejs.triggerEvents 'click'
+  eyejs.triggerGazeEvents 'click'
 
 # Don't prevent triggering a click if inside a form element.
 # @see http://craig.is/killing/mice
