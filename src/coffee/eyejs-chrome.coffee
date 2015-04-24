@@ -3,8 +3,7 @@ require './../../lib/mousetrap/mousetrap'
 
 EyeJS = require '/Users/josh/work/eyejs'
 
-disableEyeJS = /disable\-eyejs/.test window.location.search
-enableEyeJS  = /enable\-eyejs/.test window.location.search
+disableEyeJS = /disable\-eyejs/.test(window.location.search) or document.body.hasAttribute 'data-eyejs-disable'
 
 eyejs = new EyeJS()
 
@@ -34,6 +33,7 @@ eyejs.on 'gaze', (e) ->
   e.el    = recorder.serializeNode e.el
   recorder.send e
 
+# Retrieve and update the local storage settings...
 chrome.storage.local.get 'config', (storage = {}) ->
   config  = storage.config
   enabled = if config.enabled? then config.enabled else eyejs.enabled
@@ -43,6 +43,9 @@ chrome.storage.local.get 'config', (storage = {}) ->
   if enabled then eyejs.enable()
   eyejs.indicator.resize size
   eyejs.indicator.opacity opacity
+
+  # Disable for special cases...
+  if disableEyeJS then eyejs.disable()
 
 
 getStatus = ->
@@ -55,11 +58,6 @@ getStatus = ->
 
 updateSettings = ->
   chrome.storage.local.set 'config': getStatus()
-
-if disableEyeJS
-  eyejs.disable()
-else if enableEyeJS
-  eyejs.enable()
 
 
 forwardBackShowTimer = null
@@ -104,7 +102,7 @@ addForwardBackButtons = ->
   back.addEventListener 'click', -> window.history.back()
   eyejs.on 'gaze', showForwardBackButtons
 
-window.addEventListener 'load', addForwardBackButtons
+addForwardBackButtons()
 
 
 
@@ -194,7 +192,7 @@ addScrollBars = ->
   down.addEventListener 'fixationend', stopScrolling
   eyejs.on 'gaze', showScrollBars
 
-window.addEventListener 'load', addScrollBars
+addScrollBars()
 
 
 Mousetrap.bind 'ctrl', ->

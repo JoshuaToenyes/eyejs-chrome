@@ -13,7 +13,7 @@
       "matches": ["<all_urls>"],
       "js": ["eyejs-chrome.js"],
       "css": ["eyejs-chrome.css"],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
   "icons": {
